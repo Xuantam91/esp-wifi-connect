@@ -1,341 +1,832 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Network Configuration</title>
+    <title>TienHuyIoT – Network Configuration</title>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="referrer no-referrer">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <style type="text/css">
-        /* ========== Base Styles ========== */
+
+    <style>
+        :root {
+            --bg-main: #02030b;
+            --bg-card: #05081c;
+            --bg-card-soft: #070b26;
+            --accent: #00ffd0;
+            --accent-soft: rgba(0, 255, 208, 0.14);
+            --accent-2: #5f89ff;
+            --text-main: #f8f9ff;
+            --text-sub: #a8b0c8;
+            --border-soft: rgba(255, 255, 255, 0.12);
+            --danger: #ff4d4f;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        /* ========== Form Elements ========== */
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        input[type="submit"] {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 10px;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        input[type="submit"]:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        #remember_bssid, #sleep_mode {
-            width: auto;
-        }
-
-        /* ========== AP List Styles ========== */
-        #ap_list {
-            margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-        }
-        #ap_list .scanning {
-            font-style: italic;
-            color: #666;
-        }
-        #ap_list a {
-            display: block;
-            margin-top: 5px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        #ap_list a:hover {
-            text-decoration: underline;
-        }
-
-        /* ========== Language Switcher ========== */
-        .language-switch {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .language-switch select {
-            padding: 5px;
-            border-radius: 3px;
-            border: 1px solid #ccc;
-        }
-
-        /* ========== Tab Styles ========== */
-        .tabs {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+            background:
+                radial-gradient(circle at top, #151b3c 0, #02030b 55%, #000000 100%),
+                #000000;
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
-            margin-top: 20px;
-            margin-bottom: 0;
-            padding-left: 20px;
-            border-bottom: 1px solid #ccc;
+            align-items: center;
+            justify-content: center;
         }
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: 1px solid #ccc;
-            border-bottom: none;
-            border-radius: 5px 5px 0 0;
-            margin-right: 5px;
-            background-color: #f0f0f0;
+
+        .page {
+            width: 100%;
+            max-width: 1100px;
+            padding: 20px 14px;
+            display: grid;
+            grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .card {
             position: relative;
-            top: 1px;
+            background:
+                radial-gradient(circle at 0 0, rgba(0, 255, 200, 0.22), transparent 60%),
+                radial-gradient(circle at 100% 0, rgba(95, 137, 255, 0.22), transparent 55%),
+                var(--bg-card);
+            border-radius: 22px;
+            padding: 20px 20px 18px;
+            box-shadow:
+                0 24px 60px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(0, 255, 208, 0.22);
+            overflow: hidden;
         }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                conic-gradient(from 160deg, rgba(0, 255, 200, 0.28), transparent, rgba(95, 137, 255, 0.28), transparent),
+                radial-gradient(circle at 50% 130%, rgba(0, 255, 200, 0.28), transparent 60%);
+            opacity: 0.6;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 30% 20%, #ffffff, #00ffc3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            color: #020308;
+            box-shadow: 0 0 18px rgba(0, 255, 208, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-text-main {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: linear-gradient(120deg, var(--accent), #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-text-sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: var(--text-sub);
+        }
+
+        .language-switch {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(5, 8, 28, 0.95);
+            border-radius: 999px;
+            padding: 4px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 14px rgba(0, 0, 0, 0.7);
+        }
+
+        .language-switch span {
+            font-size: 11px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+        }
+
+        .language-switch select {
+            padding: 4px 6px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(1, 4, 18, 0.96);
+            color: var(--text-main);
+            font-size: 11px;
+            outline: none;
+        }
+
+        .tabs {
+            display: inline-flex;
+            padding: 4px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            padding: 8px 18px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+        }
+
         .tab.active {
-            background-color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #02040d;
+            font-weight: 600;
+            box-shadow: 0 0 18px rgba(0, 255, 208, 0.55);
+            transform: translateY(-0.5px);
         }
+
         .tab-content {
             display: none;
-            border-top: none;
-            padding: 20px;
-            background-color: #fff;
+            background: radial-gradient(circle at top left, rgba(0, 255, 200, 0.07), transparent 65%),
+                        radial-gradient(circle at bottom right, rgba(95, 137, 255, 0.12), transparent 55%),
+                        var(--bg-card-soft);
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 8px;
         }
+
         .tab-content.active {
             display: block;
         }
 
-        /* ========== Toast Message Styles ========== */
+        h3 {
+            margin: 0 0 10px;
+            font-size: 15px;
+        }
+
+        p {
+            margin: 8px 0;
+            font-size: 13px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            background: rgba(1, 4, 16, 0.96);
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, transform 0.06s ease;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="password"]::placeholder {
+            color: #657091;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow:
+                0 0 0 1px rgba(0, 255, 200, 0.55),
+                0 0 18px rgba(0, 255, 200, 0.35);
+            background: rgba(4, 9, 28, 0.98);
+            transform: translateY(-0.3px);
+        }
+
+        input[type="submit"] {
+            width: auto;
+            min-width: 120px;
+            padding: 9px 20px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: #02040d;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(0, 255, 200, 0.4);
+            transition: background 0.16s ease, box-shadow 0.16s ease, transform 0.06s ease, opacity 0.1s ease;
+        }
+
+        input[type="submit"]:hover {
+            box-shadow: 0 16px 34px rgba(0, 255, 200, 0.6);
+            transform: translateY(-0.5px);
+        }
+
+        input[type="submit"]:active {
+            box-shadow: 0 8px 20px rgba(0, 255, 200, 0.5);
+            transform: translateY(0.2px) scale(0.99);
+        }
+
+        input[type="submit"]:disabled {
+            background: linear-gradient(135deg, #555d78, #30374d);
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        #remember_bssid,
+        #sleep_mode {
+            width: auto;
+        }
+
+        #saved_list_container {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        #saved_list {
+            padding-left: 16px;
+            margin: 0;
+            list-style: none;
+        }
+
+        #saved_list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin: 4px 0;
+            gap: 6px;
+        }
+
+        #saved_list button {
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(5, 8, 30, 0.9);
+            color: var(--text-main);
+            font-size: 11px;
+            padding: 3px 6px;
+            cursor: pointer;
+        }
+
+        #saved_list button:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        #ap_list {
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        #ap_list p {
+            margin-top: 0;
+        }
+
+        #ap_list .scanning {
+            font-style: italic;
+            color: var(--text-sub);
+        }
+
+        #ap_list a {
+            display: block;
+            margin-top: 5px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        #ap_list a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: var(--danger);
+            font-size: 13px;
+        }
+
         .toast {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.86);
             color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
+            padding: 14px 26px;
+            border-radius: 10px;
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.25s ease-in-out;
             min-width: 200px;
             text-align: center;
+            font-size: 14px;
         }
+
         .toast.show {
             opacity: 1;
         }
 
-        /* ========== Loading Spinner Styles ========== */
         .loading-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.58);
             z-index: 2000;
             justify-content: center;
             align-items: center;
         }
+
         .loading-overlay.show {
             display: flex;
         }
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 6px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+
         .loading-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 18px;
         }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.28);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
         .loading-text {
             color: white;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            font-weight: 600;
         }
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .guide-card {
+            position: relative;
+            background:
+                radial-gradient(circle at top right, rgba(95, 137, 255, 0.3), transparent 65%),
+                radial-gradient(circle at bottom left, rgba(0, 255, 200, 0.24), transparent 55%),
+                rgba(3, 6, 22, 0.98);
+            border-radius: 22px;
+            padding: 20px 20px 18px;
+            box-shadow:
+                0 20px 52px rgba(0, 0, 0, 0.88),
+                0 0 0 1px rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(95, 137, 255, 0.35);
+            color: var(--text-main);
+        }
+
+        .guide-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 10px;
+            font-size: 15px;
+        }
+
+        .guide-title span {
+            font-size: 18px;
+        }
+
+        .guide-intro {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin: 0 0 10px;
+        }
+
+        .steps {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px;
+            counter-reset: step;
+        }
+
+        .steps li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-main);
+        }
+
+        .steps li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, var(--accent-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #020308;
+            box-shadow: 0 0 14px rgba(95, 137, 255, 0.9);
+        }
+
+        .steps li span.tag {
+            margin-left: 4px;
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 1px 7px;
+            border: 1px solid rgba(0, 255, 200, 0.7);
+            color: var(--accent);
+            background: rgba(0, 255, 200, 0.1);
+        }
+
+        .guide-highlight {
+            margin-top: 6px;
+            padding: 8px 9px;
+            border-radius: 14px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px dashed rgba(0, 255, 200, 0.55);
+            color: var(--text-sub);
+        }
+
+        .guide-highlight strong {
+            color: var(--accent);
+        }
+
+        .guide-section-title {
+            margin: 12px 0 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--accent-soft);
+        }
+
+        .error-list {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        .error-list li + li {
+            margin-top: 4px;
+        }
+
+        .help-links {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .help-links a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .help-links a:hover {
+            text-decoration: underline;
+        }
+
+        .guide-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            margin-bottom: 6px;
+        }
+
+        .guide-badge span.dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #20ffab;
+            box-shadow: 0 0 12px rgba(0, 255, 171, 0.9);
+        }
+
+        .guide-footer {
+            margin-top: 10px;
+            font-size: 11px;
+            text-align: right;
+            color: var(--text-sub);
+        }
+
+        .guide-footer span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .page {
+                grid-template-columns: minmax(0, 1fr);
+                max-width: 680px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .page {
+                padding: 16px 12px;
+            }
+
+            .card,
+            .guide-card {
+                border-radius: 20px;
+                padding: 16px 14px 14px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .language-switch {
+                margin-left: -2px;
+                margin-top: 6px;
+            }
+
+            .tab-content {
+                padding: 14px 14px 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Toast notification -->
     <div class="toast" id="toast"></div>
-    
-    <!-- Loading overlay -->
+
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
             <div class="loading-spinner"></div>
             <div class="loading-text" data-lang="connecting">Connecting...</div>
         </div>
     </div>
-    
-    <!-- Language switcher -->
-    <div class="language-switch">
-        <select id="language" onchange="changeLanguage()">
-            <option value="ar-SA">العربية</option>
-            <option value="bg-BG">Български</option>
-            <option value="ca-ES">Català</option>
-            <option value="cs-CZ">Čeština</option>
-            <option value="da-DK">Dansk</option>
-            <option value="de-DE">Deutsch</option>
-            <option value="el-GR">Ελληνικά</option>
-            <option value="en-US">English</option>
-            <option value="es-ES">Español</option>
-            <option value="fa-IR">فارسی</option>
-            <option value="fi-FI">Suomi</option>
-            <option value="fil-PH">Filipino</option>
-            <option value="fr-FR">Français</option>
-            <option value="he-IL">עברית</option>
-            <option value="hi-IN">हिन्दी</option>
-            <option value="hr-HR">Hrvatski</option>
-            <option value="hu-HU">Magyar</option>
-            <option value="id-ID">Bahasa Indonesia</option>
-            <option value="it-IT">Italiano</option>
-            <option value="ja-JP">日本語</option>
-            <option value="ko-KR">한국어</option>
-            <option value="ms-MY">Bahasa Melayu</option>
-            <option value="nb-NO">Norsk</option>
-            <option value="nl-NL">Nederlands</option>
-            <option value="pl-PL">Polski</option>
-            <option value="pt-PT">Português</option>
-            <option value="ro-RO">Română</option>
-            <option value="ru-RU">Русский</option>
-            <option value="sk-SK">Slovenčina</option>
-            <option value="sl-SI">Slovenščina</option>
-            <option value="sr-RS">Српски</option>
-            <option value="sv-SE">Svenska</option>
-            <option value="th-TH">ไทย</option>
-            <option value="tr-TR">Türkçe</option>
-            <option value="uk-UA">Українська</option>
-            <option value="vi-VN">Tiếng Việt</option>
-            <option value="zh-CN">简体中文</option>
-            <option value="zh-TW">繁體中文</option>
-        </select>
-    </div>
-    
-    <!-- Tabs -->
-    <div class="tabs">
-        <div class="tab active" onclick="switchTab('wifi')" data-lang="wifi_tab">Wi-Fi Config</div>
-        <div class="tab" onclick="switchTab('advanced')" data-lang="advanced_tab">Advanced</div>
-    </div>
 
-    <!-- Wi-Fi Configuration Tab -->
-    <div id="wifi-tab" class="tab-content active">
-        <!-- Saved Wi-Fi List -->
-        <div id="saved_list_container" style="display: none;">
-            <h3 data-lang="saved_wifi">Saved Wi-Fi</h3>
-            <ul id="saved_list">
-                <li><span>SSID</span></li>
-            </ul>
-        </div>
-        
-        <!-- New Wi-Fi Connection -->
-        <div>
-            <h3 data-lang="new_wifi">New Wi-Fi</h3>
-            <p class="error" style="color: red; text-align: center;" id="error"></p>
-            <form action="/submit" method="post" onsubmit="submitForm(event)">
-                <p>
-                    <label for="ssid">SSID:</label>
-                    <input type="text" id="ssid" name="ssid" required readonly>
-                </p>
-                <p>
-                    <label for="password" data-lang="password">Password:</label>
-                    <input type="password" id="password" name="password">
-                </p>
-                <p style="text-align: center;">
-                    <input type="submit" value="Connect" id="button" data-lang-value="connect">
-                </p>
-            </form>
-            <p id="ap_list"></p>
-        </div>
-    </div>
-
-    <!-- Advanced Configuration Tab -->
-    <div id="advanced-tab" class="tab-content">
-        <form action="/advanced/submit" method="post" onsubmit="submitAdvancedForm(event)">
-            <div>
-                <h3 data-lang="advanced_tab">Advanced</h3>
-                <p class="error" style="color: red; text-align: center;" id="advanced_error"></p>
-
-                <!-- MUSIC URL -->
-                <p>
-                    <label for="music_url" data-lang="music_url">Custom MUSIC URL:</label>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="text" id="music_url" name="music_url" style="flex: 1;">
-                        <button type="button" onclick="clearMusicUrl()" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 3px; background-color: #f0f0f0; cursor: pointer;">❌</button>
+    <div class="page">
+        <div class="card">
+            <div class="card-header">
+                <div class="brand">
+                    <div class="brand-logo">T</div>
+                    <div>
+                        <div class="brand-text-main">TienHuyIoT</div>
+                        <div class="brand-text-sub">Wi-Fi device setup</div>
                     </div>
-                </p>
+                </div>
 
-                <!-- OTA URL -->
-                <p>
-                    <label for="ota_url" data-lang="ota_url">Custom OTA URL:</label>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <input type="text" id="ota_url" name="ota_url" style="flex: 1;">
-                        <button type="button" onclick="clearOtaUrl()" style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 3px; background-color: #f0f0f0; cursor: pointer;">❌</button>
-                    </div>
-                </p>
-
-                <!-- Max TX Power -->
-                <p style="display: flex; align-items: center; gap: 10px;">
-                    <label for="max_tx_power" data-lang="max_tx_power" style="white-space: nowrap;">Wi-Fi Max TX Power:</label>
-                    <select id="max_tx_power" name="max_tx_power">
-                        <option value="8">2 dBm</option>
-                        <option value="20">5 dBm</option>
-                        <option value="28">7 dBm</option>
-                        <option value="34">8 dBm</option>
-                        <option value="44">11 dBm</option>
-                        <option value="52">13 dBm</option>
-                        <option value="56">14 dBm</option>
-                        <option value="60">15 dBm</option>
-                        <option value="66">16 dBm</option>
-                        <option value="72">18 dBm</option>
-                        <option value="80">20 dBm</option>
+                <div class="language-switch">
+                    <span>LANG</span>
+                    <select id="language" onchange="changeLanguage()">
+                        <option value="ar-SA">العربية</option>
+                        <option value="bg-BG">Български</option>
+                        <option value="ca-ES">Català</option>
+                        <option value="cs-CZ">Čeština</option>
+                        <option value="da-DK">Dansk</option>
+                        <option value="de-DE">Deutsch</option>
+                        <option value="el-GR">Ελληνικά</option>
+                        <option value="en-US">English</option>
+                        <option value="es-ES">Español</option>
+                        <option value="fa-IR">فارسی</option>
+                        <option value="fi-FI">Suomi</option>
+                        <option value="fil-PH">Filipino</option>
+                        <option value="fr-FR">Français</option>
+                        <option value="he-IL">עברית</option>
+                        <option value="hi-IN">हिन्दी</option>
+                        <option value="hr-HR">Hrvatski</option>
+                        <option value="hu-HU">Magyar</option>
+                        <option value="id-ID">Bahasa Indonesia</option>
+                        <option value="it-IT">Italiano</option>
+                        <option value="ja-JP">日本語</option>
+                        <option value="ko-KR">한국어</option>
+                        <option value="ms-MY">Bahasa Melayu</option>
+                        <option value="nb-NO">Norsk</option>
+                        <option value="nl-NL">Nederlands</option>
+                        <option value="pl-PL">Polski</option>
+                        <option value="pt-PT">Português</option>
+                        <option value="ro-RO">Română</option>
+                        <option value="ru-RU">Русский</option>
+                        <option value="sk-SK">Slovenčina</option>
+                        <option value="sl-SI">Slovenščina</option>
+                        <option value="sr-RS">Српски</option>
+                        <option value="sv-SE">Svenska</option>
+                        <option value="th-TH">ไทย</option>
+                        <option value="tr-TR">Türkçe</option>
+                        <option value="uk-UA">Українська</option>
+                        <option value="vi-VN">Tiếng Việt</option>
+                        <option value="zh-CN">简体中文</option>
+                        <option value="zh-TW">繁體中文</option>
                     </select>
-                </p>
-
-                <!-- Remember BSSID -->
-                <p style="display: flex; align-items: center; gap: 10px;">
-                    <label for="remember_bssid" style="margin: 0;">
-                        <span data-lang="remember_bssid">Remember BSSID when connecting to Wi-Fi</span>
-                    </label>
-                    <input type="checkbox" id="remember_bssid" name="remember_bssid">
-                </p>
-
-                <!-- Sleep Mode -->
-                <p style="display: flex; align-items: center; gap: 10px;">
-                    <label for="sleep_mode" style="margin: 0;">
-                        <span data-lang="sleep_mode">Enable Sleep Mode</span>
-                    </label>
-                    <input type="checkbox" id="sleep_mode" name="sleep_mode">
-                </p>
-
-                <p style="text-align: center;">
-                    <input type="submit" value="Save" id="advanced_button" data-lang-value="save">
-                </p>
+                </div>
             </div>
-        </form>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('wifi')" data-lang="wifi_tab">Wi-Fi Config</div>
+                <div class="tab" onclick="switchTab('advanced')" data-lang="advanced_tab">Advanced</div>
+            </div>
+
+            <div id="wifi-tab" class="tab-content active">
+                <div id="saved_list_container" style="display: none;">
+                    <h3 data-lang="saved_wifi">Saved Wi-Fi</h3>
+                    <ul id="saved_list">
+                        <li><span>SSID</span></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 data-lang="new_wifi">New Wi-Fi</h3>
+                    <p class="error" id="error"></p>
+                    <form action="/submit" method="post" onsubmit="submitForm(event)">
+                        <p>
+                            <label for="ssid">SSID:</label>
+                            <input type="text" id="ssid" name="ssid" required readonly>
+                        </p>
+                        <p>
+                            <label for="password" data-lang="password">Password:</label>
+                            <input type="password" id="password" name="password">
+                        </p>
+                        <p style="text-align:center;margin-top:12px;">
+                            <input type="submit" value="Connect" id="button" data-lang-value="connect">
+                        </p>
+                    </form>
+                    <p id="ap_list"></p>
+                </div>
+            </div>
+
+            <div id="advanced-tab" class="tab-content">
+                <form action="/advanced/submit" method="post" onsubmit="submitAdvancedForm(event)">
+                    <div>
+                        <h3 data-lang="advanced_tab">Advanced</h3>
+                        <p class="error" id="advanced_error"></p>
+
+                        <p>
+                            <label for="music_url" data-lang="music_url">Custom MUSIC URL:</label>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <input type="text" id="music_url" name="music_url" style="flex:1;">
+                                <button type="button" onclick="clearMusicUrl()" style="padding:5px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:8px;background:rgba(0,0,0,0.4);color:#fff;cursor:pointer;">❌</button>
+                            </div>
+                        </p>
+
+                        <p>
+                            <label for="ota_url" data-lang="ota_url">Custom OTA URL:</label>
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <input type="text" id="ota_url" name="ota_url" style="flex:1;">
+                                <button type="button" onclick="clearOtaUrl()" style="padding:5px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:8px;background:rgba(0,0,0,0.4);color:#fff;cursor:pointer;">❌</button>
+                            </div>
+                        </p>
+
+                        <p style="display:flex;align-items:center;gap:10px;">
+                            <label for="max_tx_power" data-lang="max_tx_power" style="white-space:nowrap;">Wi-Fi Max TX Power:</label>
+                            <select id="max_tx_power" name="max_tx_power">
+                                <option value="8">2 dBm</option>
+                                <option value="20">5 dBm</option>
+                                <option value="28">7 dBm</option>
+                                <option value="34">8 dBm</option>
+                                <option value="44">11 dBm</option>
+                                <option value="52">13 dBm</option>
+                                <option value="56">14 dBm</option>
+                                <option value="60">15 dBm</option>
+                                <option value="66">16 dBm</option>
+                                <option value="72">18 dBm</option>
+                                <option value="80">20 dBm</option>
+                            </select>
+                        </p>
+
+                        <p style="display:flex;align-items:center;gap:10px;">
+                            <label for="remember_bssid" style="margin:0;">
+                                <span data-lang="remember_bssid">Remember BSSID when connecting to Wi-Fi</span>
+                            </label>
+                            <input type="checkbox" id="remember_bssid" name="remember_bssid">
+                        </p>
+
+                        <p style="display:flex;align-items:center;gap:10px;">
+                            <label for="sleep_mode" style="margin:0;">
+                                <span data-lang="sleep_mode">Enable Sleep Mode</span>
+                            </label>
+                            <input type="checkbox" id="sleep_mode" name="sleep_mode">
+                        </p>
+
+                        <p style="text-align:center;margin-top:12px;">
+                            <input type="submit" value="Save" id="advanced_button" data-lang-value="save">
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="guide-card">
+            <div class="guide-badge">
+                <span class="dot"></span>
+                Quick guide for TienHuyIoT boards
+            </div>
+            <h3 class="guide-title">
+                <span>📶</span>
+                Kết nối Wi-Fi cho thiết bị ESP32
+            </h3>
+            <p class="guide-intro">
+                Dùng trang này khi thiết bị TienHuyIoT mở điểm phát Wi-Fi riêng. Chỉ cần chọn mạng nhà bạn và nhập
+                mật khẩu, phần còn lại thiết bị sẽ tự xử lý.
+            </p>
+            <ol class="steps">
+                <li>
+                    Kết nối điện thoại/laptop vào Wi-Fi tạm thời của thiết bị
+                    (thường có chữ <strong>ESP32</strong> hoặc tên board) rồi mở trang cấu hình.
+                </li>
+                <li>
+                    Nhấn vào mạng Wi-Fi trong mục
+                    <strong data-lang="select_wifi">Select a 2.4G Wi-Fi from the list below:</strong>
+                    để đổ tên SSID vào ô bên trên.
+                </li>
+                <li>
+                    Nhập đúng mật khẩu Wi-Fi nhà bạn rồi nhấn nút
+                    <strong data-lang="connect">Connect</strong>
+                    <span class="tag">Tự động lưu</span>
+                </li>
+                <li>
+                    Đợi thiết bị báo kết nối thành công (đèn LED, tiếng nói, màn hình hoặc log trên serial).
+                    Sau đó bạn có thể rút nguồn cấp tạm thời và dùng thiết bị bình thường.
+                </li>
+                <li>
+                    Khi đã ổn định, vào tab <strong data-lang="advanced_tab">Advanced</strong> để chỉnh URL OTA,
+                    MUSIC hoặc công suất phát Wi-Fi cho phù hợp.
+                </li>
+            </ol>
+            <div class="guide-highlight">
+                <strong>Mẹo nhỏ:</strong> Luôn ưu tiên mạng 2.4&nbsp;GHz cho ESP32. Nếu router phát cả 2.4G và 5G,
+                hãy chọn tên Wi-Fi có đuôi <em>2G</em>, <em>2.4G</em> hoặc không ghi gì.
+            </div>
+
+            <div class="guide-section-title">Sự cố thường gặp</div>
+            <ul class="error-list">
+                <li>Không thấy tên Wi-Fi nhà bạn: kiểm tra router có bật 2.4G và SSID không ẩn.</li>
+                <li>Nhập đúng mật khẩu nhưng không kết nối: thử khởi động lại router và thiết bị rồi cấu hình lại.</li>
+                <li>Thiết bị hay rớt mạng: giảm công suất TX hoặc đổi vị trí đặt router cho gần hơn.</li>
+            </ul>
+
+            <div class="help-links">
+                Cần hỗ trợ thêm? Liên hệ Zalo nhóm hỗ trợ TienHuyIoT:
+                <a href="https://zalo.me/g/fsyuiz890" target="_blank" rel="noopener noreferrer">bấm vào đây</a>.
+            </div>
+
+            <div class="guide-footer">
+                Thiết kế bởi <span>RoBot5320</span> dành tặng <span>TienHuyIoT</span>.
+            </div>
+        </div>
     </div>
 
-    <script type="text/javascript">
-        // ========== Global Variables ==========
+    <script>
         const button = document.getElementById('button');
         const error = document.getElementById('error');
         const ssid = document.getElementById('ssid');
-        let support5G = false; // Store 5G support status
+        let support5G = false;
 
-        // ========== Translation Data ==========
         const translations = {
             'ar-SA': {
                 title: 'تكوين الشبكة',
@@ -1027,158 +1518,87 @@
             }
         };
 
-        // ========== Language Mapping ==========
-        // Maps browser language codes to supported language codes
         const languageMap = {
-            // Arabic
             'ar': 'ar-SA', 'ar-SA': 'ar-SA', 'ar-EG': 'ar-SA', 'ar-AE': 'ar-SA',
-            // Bulgarian
             'bg': 'bg-BG', 'bg-BG': 'bg-BG',
-            // Catalan
             'ca': 'ca-ES', 'ca-ES': 'ca-ES',
-            // Czech
             'cs': 'cs-CZ', 'cs-CZ': 'cs-CZ',
-            // Danish
             'da': 'da-DK', 'da-DK': 'da-DK',
-            // German
             'de': 'de-DE', 'de-DE': 'de-DE', 'de-AT': 'de-DE', 'de-CH': 'de-DE',
-            // Greek
             'el': 'el-GR', 'el-GR': 'el-GR',
-            // English
             'en': 'en-US', 'en-US': 'en-US', 'en-GB': 'en-US', 'en-CA': 'en-US', 'en-AU': 'en-US',
-            // Spanish
             'es': 'es-ES', 'es-ES': 'es-ES', 'es-MX': 'es-ES', 'es-AR': 'es-ES',
-            // Persian
             'fa': 'fa-IR', 'fa-IR': 'fa-IR',
-            // Finnish
             'fi': 'fi-FI', 'fi-FI': 'fi-FI',
-            // Filipino
             'fil': 'fil-PH', 'fil-PH': 'fil-PH', 'tl': 'fil-PH',
-            // French
             'fr': 'fr-FR', 'fr-FR': 'fr-FR', 'fr-CA': 'fr-FR', 'fr-BE': 'fr-FR',
-            // Hebrew
             'he': 'he-IL', 'he-IL': 'he-IL', 'iw': 'he-IL',
-            // Hindi
             'hi': 'hi-IN', 'hi-IN': 'hi-IN',
-            // Croatian
             'hr': 'hr-HR', 'hr-HR': 'hr-HR',
-            // Hungarian
             'hu': 'hu-HU', 'hu-HU': 'hu-HU',
-            // Indonesian
             'id': 'id-ID', 'id-ID': 'id-ID',
-            // Italian
             'it': 'it-IT', 'it-IT': 'it-IT', 'it-CH': 'it-IT',
-            // Japanese
             'ja': 'ja-JP', 'ja-JP': 'ja-JP',
-            // Korean
             'ko': 'ko-KR', 'ko-KR': 'ko-KR',
-            // Malay
             'ms': 'ms-MY', 'ms-MY': 'ms-MY',
-            // Norwegian
             'nb': 'nb-NO', 'nb-NO': 'nb-NO', 'no': 'nb-NO', 'nn': 'nb-NO',
-            // Dutch
             'nl': 'nl-NL', 'nl-NL': 'nl-NL', 'nl-BE': 'nl-NL',
-            // Polish
             'pl': 'pl-PL', 'pl-PL': 'pl-PL',
-            // Portuguese
             'pt': 'pt-PT', 'pt-PT': 'pt-PT', 'pt-BR': 'pt-PT',
-            // Romanian
             'ro': 'ro-RO', 'ro-RO': 'ro-RO',
-            // Russian
             'ru': 'ru-RU', 'ru-RU': 'ru-RU',
-            // Slovak
             'sk': 'sk-SK', 'sk-SK': 'sk-SK',
-            // Slovenian
             'sl': 'sl-SI', 'sl-SI': 'sl-SI',
-            // Serbian
             'sr': 'sr-RS', 'sr-RS': 'sr-RS',
-            // Swedish
             'sv': 'sv-SE', 'sv-SE': 'sv-SE',
-            // Thai
             'th': 'th-TH', 'th-TH': 'th-TH',
-            // Turkish
             'tr': 'tr-TR', 'tr-TR': 'tr-TR',
-            // Ukrainian
             'uk': 'uk-UA', 'uk-UA': 'uk-UA',
-            // Vietnamese
             'vi': 'vi-VN', 'vi-VN': 'vi-VN',
-            // Chinese
             'zh': 'zh-CN', 'zh-CN': 'zh-CN', 'zh-TW': 'zh-TW', 'zh-HK': 'zh-TW'
         };
 
-        // ========== Helper Functions ==========
-        
-        /**
-         * Get supported language code from browser language
-         */
         function getSupportedLanguage(lang) {
-            // First try exact match
-            if (languageMap[lang]) {
-                return languageMap[lang];
-            }
-            // Then try to match only the main language code
+            if (languageMap[lang]) return languageMap[lang];
             const mainLang = lang.split('-')[0];
-            if (languageMap[mainLang]) {
-                return languageMap[mainLang];
-            }
-            // If no match, return English
+            if (languageMap[mainLang]) return languageMap[mainLang];
             return 'en-US';
         }
 
-        /**
-         * Change the page language
-         */
         function changeLanguage() {
             const lang = document.getElementById('language').value;
-            
-            // Check if language is valid
             if (!translations[lang]) {
-                console.warn(`Unsupported language: ${lang}, defaulting to English`);
                 document.getElementById('language').value = 'en-US';
                 return changeLanguage();
             }
-            
-            // Set page title
             document.title = translations[lang].title;
-            
-            // Update text content
             document.querySelectorAll('[data-lang]').forEach(element => {
                 const key = element.getAttribute('data-lang');
-                element.textContent = translations[lang][key];
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
             });
-            
-            // Update input values
             document.querySelectorAll('[data-lang-value]').forEach(element => {
                 const key = element.getAttribute('data-lang-value');
-                element.value = translations[lang][key];
+                if (translations[lang][key]) {
+                    element.value = translations[lang][key];
+                }
             });
-            
-            // Update AP list text based on 5G support
             const apList = document.getElementById('ap_list');
             if (apList.firstChild) {
                 const selectText = support5G ? translations[lang].select_wifi_5g : translations[lang].select_wifi;
                 apList.firstChild.textContent = selectText;
             }
-            
-            // Save language preference
             localStorage.setItem('preferred_language', lang);
         }
 
-        // ========== Wi-Fi List Management ==========
-        
-        /**
-         * Render saved Wi-Fi list
-         */
         function renderSavedList(data) {
             const savedListContainer = document.getElementById('saved_list_container');
             const savedList = document.getElementById('saved_list');
             savedList.innerHTML = '';
-            
-            data.forEach((ssid, index) => {
+            data.forEach((s, index) => {
                 const li = document.createElement('li');
-                let html = `<span>${ssid}</span>`;
-                
-                // Only add priority and delete buttons after the first item
+                let html = `<span>${s}</span>`;
                 if (index > 0) {
                     html += ` <span>
                         <button type="button" onclick="setDefaultItem(this, ${index})">⬆️</button>
@@ -1187,42 +1607,30 @@
                 } else {
                     html += ` <span><button type="button" onclick="deleteItem(this, ${index})">❌</button></span>`;
                 }
-                
                 li.innerHTML = html;
                 savedList.appendChild(li);
             });
-            
-            // Show/hide container based on whether there are saved networks
             savedListContainer.style.display = data.length > 0 ? 'block' : 'none';
         }
 
-        /**
-         * Delete saved Wi-Fi network
-         */
         function deleteItem(item, index) {
             item.disabled = true;
             fetch('/saved/delete?index=' + index)
                 .then(response => response.json())
-                .then(data => {
+                .then(() => {
                     loadSavedList();
                 });
         }
 
-        /**
-         * Set default Wi-Fi network (move to top)
-         */
         function setDefaultItem(item, index) {
             item.disabled = true;
             fetch('/saved/set_default?index=' + index)
                 .then(response => response.json())
-                .then(data => {
+                .then(() => {
                     loadSavedList();
                 });
         }
 
-        /**
-         * Load saved Wi-Fi list from server
-         */
         function loadSavedList() {
             fetch('/saved/list')
                 .then(response => response.json())
@@ -1231,84 +1639,51 @@
                 });
         }
 
-        /**
-         * Load available Wi-Fi networks
-         */
         function loadAPList() {
-            if (button.disabled) {
-                return;
-            }
-
+            if (button.disabled) return;
             const lang = document.getElementById('language').value;
             const apList = document.getElementById('ap_list');
-
-            // Check if AP list already has content
             const hasExistingAPs = apList.querySelector('a') !== null;
-
-            // Only show scanning text if there's no existing AP list
             if (!hasExistingAPs) {
                 apList.innerHTML = '<p class="scanning">' + translations[lang].scanning + '</p>';
             }
-
             fetch('/scan')
                 .then(response => response.json())
                 .then(data => {
-                    // Update global 5G support status
                     support5G = data.support_5g;
-                    
-                    // Use select_wifi_5g if 5G is supported, otherwise use select_wifi
                     const selectText = support5G ? translations[lang].select_wifi_5g : translations[lang].select_wifi;
                     apList.innerHTML = '<p>' + selectText + '</p>';
-                    
-                    // Iterate through available APs
                     data.aps.forEach(ap => {
                         const link = document.createElement('a');
                         link.href = '#';
                         link.textContent = ap.ssid + ' (' + ap.rssi + ' dBm)';
-                        
-                        // Add lock icon for secured networks
                         if (ap.authmode === 0) {
                             link.textContent += ' 🌐';
                         } else {
                             link.textContent += ' 🔒';
                         }
-                        
                         link.addEventListener('click', () => {
                             ssid.value = ap.ssid;
                         });
-                        
                         apList.appendChild(link);
                     });
-                    
-                    // Refresh AP list every 5 seconds
                     setTimeout(loadAPList, 5000);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // On error, try again after 5 seconds
+                .catch(() => {
                     setTimeout(loadAPList, 5000);
                 });
         }
 
-        // ========== Form Submission ==========
-        
-        /**
-         * Submit Wi-Fi connection form
-         */
         async function submitForm(event) {
             event.preventDefault();
             button.disabled = true;
             error.textContent = '';
-
-            // Show loading animation
             const loadingOverlay = document.getElementById('loadingOverlay');
             loadingOverlay.classList.add('show');
-
             const payload = {
                 ssid: ssid.value,
                 password: document.getElementById('password').value
             };
-
             try {
                 const response = await fetch('/submit', {
                     method: 'POST',
@@ -1317,33 +1692,25 @@
                     },
                     body: JSON.stringify(payload)
                 });
-
                 const data = await response.json();
                 if (!data.success) {
                     throw new Error(data.error || 'Connection failed');
                 }
-
-                // Connection successful, redirect to done page
                 button.disabled = false;
                 window.location.href = '/done.html';
             } catch (err) {
-                // Hide loading animation on error
                 loadingOverlay.classList.remove('show');
                 error.textContent = err.message;
                 button.disabled = false;
             }
         }
 
-        /**
-         * Submit advanced configuration form
-         */
         async function submitAdvancedForm(event) {
             event.preventDefault();
             const advancedButton = document.getElementById('advanced_button');
             const advancedError = document.getElementById('advanced_error');
             advancedButton.disabled = true;
             advancedError.textContent = '';
-
             const config = {
                 music_url: document.getElementById('music_url').value,
                 ota_url: document.getElementById('ota_url').value,
@@ -1351,7 +1718,6 @@
                 remember_bssid: document.getElementById('remember_bssid').checked,
                 sleep_mode: document.getElementById('sleep_mode').checked
             };
-
             try {
                 const response = await fetch('/advanced/submit', {
                     method: 'POST',
@@ -1360,12 +1726,10 @@
                     },
                     body: JSON.stringify(config)
                 });
-
                 const data = await response.json();
                 if (!data.success) {
                     throw new Error(data.error || 'Save failed');
                 }
-
                 advancedButton.disabled = false;
                 showToast('Configuration saved');
             } catch (err) {
@@ -1374,32 +1738,17 @@
             }
         }
 
-        // ========== UI Functions ==========
-        
-        /**
-         * Switch between tabs
-         */
         function switchTab(tabName) {
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-            
-            // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
-            // Show selected tab content
             document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Activate selected tab
             document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
         }
 
-        /**
-         * Show toast notification
-         */
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1409,14 +1758,10 @@
             }, 3000);
         }
 
-        /**
-         * Load advanced configuration from server
-         */
         async function loadAdvancedConfig() {
             try {
                 const response = await fetch('/advanced/config');
                 const data = await response.json();
-                
                 if (data.music_url) {
                     document.getElementById('music_url').value = data.music_url;
                 }
@@ -1432,43 +1777,25 @@
                 if (data.sleep_mode !== undefined) {
                     document.getElementById('sleep_mode').checked = data.sleep_mode;
                 }
-            } catch (error) {
-                console.error('Error loading advanced config:', error);
+            } catch (e) {
             }
         }
 
-        /**
-         * Clear MUSIC URL input field
-         */
         function clearMusicUrl() {
             document.getElementById('music_url').value = '';
         }
 
-        /**
-         * Clear OTA URL input field
-         */
         function clearOtaUrl() {
             document.getElementById('ota_url').value = '';
         }
 
-        // ========== Initialization ==========
-        
-        /**
-         * Initialize page on DOM load
-         */
         document.addEventListener('DOMContentLoaded', () => {
-            // Get language setting from URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const langParam = urlParams.get('lang');
-            
-            // Get browser language
             const browserLang = navigator.language || navigator.userLanguage;
-            
-            // Priority: URL parameter > local storage > browser language setting
-            const savedLang = langParam || 
-                             localStorage.getItem('preferred_language') || 
-                             getSupportedLanguage(browserLang);
-            
+            const savedLang = langParam ||
+                localStorage.getItem('preferred_language') ||
+                getSupportedLanguage(browserLang);
             document.getElementById('language').value = savedLang;
             changeLanguage();
             loadSavedList();
@@ -1476,22 +1803,16 @@
             loadAdvancedConfig();
         });
 
-        /**
-         * Handle browser back button
-         */
         window.addEventListener('pageshow', (event) => {
             if (event.persisted) {
                 loadSavedList();
             }
         });
 
-        /**
-         * Enable SSID input (fix iOS bug)
-         */
         ssid.addEventListener('touchstart', () => {
             ssid.removeAttribute('readonly');
             ssid.focus();
-        }, {once: true});
+        }, { once: true });
     </script>
 </body>
 </html>
