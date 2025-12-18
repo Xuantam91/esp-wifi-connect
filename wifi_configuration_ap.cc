@@ -17,7 +17,7 @@
 #include "ssid_manager.h"
 
 #define TAG "WifiConfigurationAp"
-
+#define DEFAULT_OTA_URL   "http://ota.globy.tech/"
 #define WIFI_CONNECTED_BIT BIT0
 #define WIFI_FAIL_BIT      BIT1
 
@@ -185,13 +185,23 @@ void WifiConfigurationAp::StartAccessPoint()
         }
 
         // 读取OTA URL
+        // char ota_url[256] = {0};
+        // size_t ota_url_size = sizeof(ota_url);
+        // err = nvs_get_str(nvs, "ota_url", ota_url, &ota_url_size);
+        // if (err == ESP_OK) {
+        //     ota_url_ = ota_url;
+        // }
+                // ===== OTA URL Default Globy=====
         char ota_url[256] = {0};
         size_t ota_url_size = sizeof(ota_url);
         err = nvs_get_str(nvs, "ota_url", ota_url, &ota_url_size);
         if (err == ESP_OK) {
             ota_url_ = ota_url;
+        } else {
+            // 👉 DEFAULT GLOBY
+            ota_url_ = DEFAULT_OTA_URL;
+            nvs_set_str(nvs, "ota_url", ota_url_.c_str());
         }
-
         // 读取WiFi功率
         err = nvs_get_i8(nvs, "max_tx_power", &max_tx_power_);
         if (err == ESP_OK) {
