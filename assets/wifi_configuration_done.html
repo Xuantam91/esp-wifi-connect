@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <style>
-        /* ===== GLOBAL ===== */
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
             color: #e5e7eb;
             background:
                 radial-gradient(circle at 20% 0%, rgba(34, 211, 238, 0.25), transparent 60%),
@@ -23,7 +20,6 @@
                 linear-gradient(135deg, #020617, #0f172a, #0b1120);
         }
 
-        /* RoBot5320 glow overlay */
         body::before {
             content: "";
             position: fixed;
@@ -33,10 +29,9 @@
                 radial-gradient(circle at 80% 60%, rgba(34, 197, 94, 0.12), transparent 60%);
             pointer-events: none;
             z-index: -1;
-            opacity: 1;
         }
 
-        /* ===== HEADER RoBot5320 ===== */
+        /* ===== HEADER ===== */
         .brand-header {
             position: fixed;
             top: 12px;
@@ -57,83 +52,71 @@
             height: 40px;
             border-radius: 14px;
             background: radial-gradient(circle at 30% 0%, #22d3ee, #22c55e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 18px;
-            color: #020617;
+            position: relative;
+            flex-shrink: 0;
             box-shadow:
                 0 0 20px rgba(34, 211, 238, 0.9),
                 0 0 0 1px rgba(15, 23, 42, 0.8);
         }
 
+        .brand-logo::after {
+            content: "GT";
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 1;
+            color: #020617;
+        }
+
         .brand-title {
             font-size: 16px;
             font-weight: 700;
-            letter-spacing: 0.05em;
-        }
-
-        .brand-text-main {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            /* text-transform: uppercase; */
-            background: linear-gradient(120deg, var(--accent), #ffffff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            white-space: nowrap;
         }
 
         /* ===== LAYOUT ===== */
         .container {
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            height: 100vh;
-            padding: 20px;
+            align-items: center;
             text-align: center;
+            padding: 20px;
         }
 
-        /* ===== Checkmark Wrapper ===== */
+        /* ===== CHECKMARK FIX ===== */
         .checkmark-wrapper {
             position: relative;
-            margin-bottom: 28px;
-            margin-top: 40px;
-			padding: 20px; /* tránh bị cắt */
+            margin: 48px 0 32px;
+            padding: 36px; /* ✅ chống lẹm */
         }
-		.checkmark {
-		overflow: visible; /* chống lẹm */
-		}
 
         .checkmark-glow {
             position: absolute;
-            inset: 10px;
+            inset: 0;
             border-radius: 999px;
-            background: radial-gradient(circle, rgba(34,197,94,0.32), transparent 70%);
-            filter: blur(12px);
-            opacity: 0;
-            animation: glow-in 0.7s ease-out 0.2s forwards;
+            background: radial-gradient(circle, rgba(34,197,94,0.35), transparent 70%);
+            filter: blur(24px);
+            z-index: 0;
         }
 
-        @keyframes glow-in {
-            from { opacity: 0; transform: scale(0.9); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-
-        /* ===== Checkmark Animation ===== */
         .checkmark {
             width: 150px;
             height: 150px;
-            filter: drop-shadow(0 10px 35px rgba(22, 163, 74, 0.45));
-            transform-origin: center;
-            animation: pop-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            overflow: visible; /* ✅ CHỐT */
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 12px 40px rgba(22,163,74,0.55));
+            animation: pop-in 0.5s cubic-bezier(0.18,0.89,0.32,1.28);
         }
 
         @keyframes pop-in {
-            0%   { transform: scale(0.7); opacity: 0; }
-            60%  { transform: scale(1.1); opacity: 1; }
+            0% { transform: scale(0.7); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
             100% { transform: scale(1); }
         }
 
@@ -155,10 +138,10 @@
             animation: check-animation 0.4s ease-out 0.6s forwards;
         }
 
-        @keyframes stroke-animation { 100% { stroke-dashoffset: 0; } }
-        @keyframes check-animation { 100% { stroke-dashoffset: 0; } }
+        @keyframes stroke-animation { to { stroke-dashoffset: 0; } }
+        @keyframes check-animation { to { stroke-dashoffset: 0; } }
 
-        /* ===== Message Box ===== */
+        /* ===== MESSAGE ===== */
         .message-box {
             background:
                 radial-gradient(circle at top left, rgba(34,211,238,0.16), transparent 60%),
@@ -166,110 +149,121 @@
                 rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(14px);
             border-radius: 22px;
-            padding: 24px 32px;
+            padding: 24px 28px;
             box-shadow:
-                0 18px 40px rgba(0, 0, 0, 0.45),
-                0 0 0 1px rgba(148, 163, 184, 0.32);
+                0 18px 40px rgba(0,0,0,0.45),
+                0 0 0 1px rgba(148,163,184,0.32);
             max-width: 360px;
             width: 100%;
-            animation: fadein 0.6s ease-out 0.2s both;
-            position: relative;
         }
 
         .message {
             font-size: 18px;
             font-weight: 600;
-            color: #e5e7eb;
         }
 
         .count {
             font-weight: 800;
             color: #5eead4;
-            text-shadow: 0 0 8px rgba(34,211,238,0.85);
-        }
-
-        .sub {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #cbd5e1;
-        }
-
-        .hint {
-            margin-top: 12px;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .count-pulse {
+            text-shadow: 0 0 12px rgba(34,211,238,1);
             animation: pulse 1s ease-out infinite;
         }
 
         @keyframes pulse {
-            0%   { transform: scale(1); }
-            50%  { transform: scale(1.18); }
-            100% { transform: scale(1); }
+            50% { transform: scale(1.18); }
         }
 
-        /* ===== Responsive ===== */
+        /* ===== BOOK CTA NỔI BẬT ===== */
+        .hint {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(15,23,42,0.85);
+            box-shadow:
+                0 0 0 1px rgba(94,234,212,0.35),
+                0 0 24px rgba(34,211,238,0.45);
+            text-decoration: none;
+            animation: doc-pulse 1.8s ease-in-out infinite;
+        }
+
+        .doc-link span {
+            font-size: 20px;
+        }
+
+        .doc-link strong {
+            font-size: 14px;
+            font-weight: 700;
+            color: #5eead4;
+        }
+
+        @keyframes doc-pulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
         @media (max-width: 480px) {
             .checkmark { width: 120px; height: 120px; }
-            .message-box { max-width: 300px; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
-    <div class="brand-header">
-        <div class="brand-logo">GT</div>
-        <div class="brand-title">Kết Nối Wifi Thành Công!</div>
+<div class="brand-header">
+    <div class="brand-logo"></div>
+    <div class="brand-title">Kết Nối Wifi Thành Công!</div>
+</div>
+
+<div class="container">
+
+    <div class="checkmark-wrapper">
+        <div class="checkmark-glow"></div>
+        <svg class="checkmark" viewBox="0 0 52 52">
+            <circle class="checkmark__circle" cx="26" cy="26" r="25"/>
+            <path class="checkmark__check" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
     </div>
 
-    <div class="container">
-
-        <!-- Checkmark animation -->
-        <div class="checkmark-wrapper">
-            <div class="checkmark-glow"></div>
-            <svg class="checkmark" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25"/>
-                <path class="checkmark__check" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
+    <div class="message-box">
+        <div class="message">
+            Thiết bị sẽ khởi động lại sau
+            <span id="countdown" class="count">3</span> giây
         </div>
 
-        <!-- Message -->
-        <div class="message-box">
-            <div class="message">
-                Thiết bị sẽ khởi động lại sau
-                <span id="countdown" class="count count-pulse">3</span> giây
-            </div>
-            
+        <div class="hint">
+            <a class="doc-link" href="https://ai.globy.tech/docs" target="_blank">
+                <span>📘</span>
+                <strong>Hướng dẫn sử dụng chi tiết</strong>
+            </a>
         </div>
     </div>
 
-    <script>
-        window.addEventListener('load', function () {
-            let count = 3;
-            let countdownElement = document.getElementById('countdown');
+</div>
 
-            const timer = setInterval(function () {
-                count--;
-                countdownElement.textContent = count;
+<script>
+window.addEventListener('load', function () {
+    let count = 3;
+    const el = document.getElementById('countdown');
 
-                if (count <= 0) {
-                    clearInterval(timer);
+    const timer = setInterval(() => {
+        count--;
+        el.textContent = count;
 
-                    fetch('/reboot', { method: 'POST' })
-                        .then(response => {
-                            if (response.ok) {
-                                window.close();
-                            }
-                        })
-                        .catch(() => {});
-                }
-            }, 1000);
-        });
-    </script>
+        if (count <= 0) {
+            clearInterval(timer);
+            fetch('/reboot', { method: 'POST' }).catch(()=>{});
+        }
+    }, 1000);
+});
+</script>
 
 </body>
 </html>
