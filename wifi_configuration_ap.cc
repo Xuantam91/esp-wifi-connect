@@ -174,7 +174,7 @@ void WifiConfigurationAp::StartAccessPoint()
 
     // 加载高级配置
     nvs_handle_t nvs;
-    esp_err_t err = nvs_open("wifi", NVS_READONLY, &nvs);
+    esp_err_t err = nvs_open("wifi", NVS_READWRITE, &nvs);
     if (err == ESP_OK) {
         // 读取MUSIC URL
         char music_url[128] = {0};
@@ -192,16 +192,23 @@ void WifiConfigurationAp::StartAccessPoint()
         //     ota_url_ = ota_url;
         // }
                 // ===== OTA URL Default Globy=====
+        #define DEFAULT_OTA_URL "http://ota.globy.tech/"
+        
         char ota_url[256] = {0};
         size_t ota_url_size = sizeof(ota_url);
+        
         err = nvs_get_str(nvs, "ota_url", ota_url, &ota_url_size);
-        if (err == ESP_OK) {
+        if (err == ESP_OK && strlen(ota_url) > 0) {
             ota_url_ = ota_url;
+            ESP_LOGI(TAG, "OTA URL from NVS: %s", ota_url_.c_str());
         } else {
-            // 👉 DEFAULT GLOBY
             ota_url_ = DEFAULT_OTA_URL;
+            ESP_LOGI(TAG, "OTA URL not found, set default: %s", ota_url_.c_str());
+        
             nvs_set_str(nvs, "ota_url", ota_url_.c_str());
+            nvs_commit(nvs);
         }
+
         // 读取WiFi功率
         err = nvs_get_i8(nvs, "max_tx_power", &max_tx_power_);
         if (err == ESP_OK) {
