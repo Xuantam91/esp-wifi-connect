@@ -32,7 +32,7 @@ WifiConfigurationAp& WifiConfigurationAp::GetInstance() {
 WifiConfigurationAp::WifiConfigurationAp()
 {
     event_group_ = xEventGroupCreate();
-    language_ = "zh-CN";
+    language_ = "vi-VN";
     sleep_mode_ = false;
 }
 
@@ -192,7 +192,7 @@ void WifiConfigurationAp::StartAccessPoint()
         //     ota_url_ = ota_url;
         // }
                 // ===== OTA URL Default Globy=====
-        #define DEFAULT_OTA_URL "http://ota.globy.tech/"
+        //#define DEFAULT_OTA_URL "http://ota.globy.tech/"
         
         char ota_url[256] = {0};
         size_t ota_url_size = sizeof(ota_url);
