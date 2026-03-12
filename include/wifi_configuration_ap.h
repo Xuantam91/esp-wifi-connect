@@ -52,6 +52,7 @@ private:
     // 高级配置项
     std::string music_url_;
     std::string ota_url_;
+    std::string child_name_;
     int8_t max_tx_power_;
     bool remember_bssid_;
     bool sleep_mode_;

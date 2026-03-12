@@ -184,6 +184,16 @@ void WifiConfigurationAp::StartAccessPoint()
             music_url_ = music_url;
         }
 
+        // 读取Idle Screen显示昵称
+        char child_name[64] = {0};
+        size_t child_name_size = sizeof(child_name);
+        err = nvs_get_str(nvs, "child_name", child_name, &child_name_size);
+        if (err == ESP_OK) {
+            child_name_ = child_name;
+        } else {
+            child_name_ = "Friend";
+        }
+
         // 读取OTA URL
         // char ota_url[256] = {0};
         // size_t ota_url_size = sizeof(ota_url);
@@ -552,6 +562,7 @@ void WifiConfigurationAp::StartWebServer()
             if (!this_->ota_url_.empty()) {
                 cJSON_AddStringToObject(json, "ota_url", this_->ota_url_.c_str());
             }
+            cJSON_AddStringToObject(json, "child_name", this_->child_name_.empty() ? "Friend" : this_->child_name_.c_str());
             cJSON_AddNumberToObject(json, "max_tx_power", this_->max_tx_power_);
             cJSON_AddBoolToObject(json, "remember_bssid", this_->remember_bssid_);
             cJSON_AddBoolToObject(json, "sleep_mode", this_->sleep_mode_);
@@ -644,6 +655,19 @@ void WifiConfigurationAp::StartWebServer()
                 }
             }
 
+            // 保存Idle Screen显示昵称
+            cJSON *child_name = cJSON_GetObjectItem(json, "child_name");
+            if (cJSON_IsString(child_name) && child_name->valuestring) {
+                this_->child_name_ = child_name->valuestring;
+                if (this_->child_name_.size() > 18) {
+                    this_->child_name_ = this_->child_name_.substr(0, 18);
+                }
+                err = nvs_set_str(nvs, "child_name", this_->child_name_.c_str());
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to save child_name: %d", err);
+                }
+            }
+
             // 保存WiFi功率
             cJSON *max_tx_power = cJSON_GetObjectItem(json, "max_tx_power");
             if (cJSON_IsNumber(max_tx_power)) {
@@ -697,6 +721,7 @@ void WifiConfigurationAp::StartWebServer()
 
             ESP_LOGI(TAG, "Save music_url=%s", this_->music_url_.c_str());
             ESP_LOGI(TAG, "Save ota_url=%s", this_->ota_url_.c_str());
+            ESP_LOGI(TAG, "Save child_name=%s", this_->child_name_.c_str());
             ESP_LOGI(TAG, "Saved settings: max_tx_power=%d, remember_bssid=%d, sleep_mode=%d",
                 this_->max_tx_power_, this_->remember_bssid_, this_->sleep_mode_);
             return ESP_OK;
