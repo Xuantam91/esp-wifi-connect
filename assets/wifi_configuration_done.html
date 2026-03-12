@@ -10,28 +10,15 @@
 
         body {
             margin: 0;
-            padding: 0;
             overflow: hidden;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-            color: #e5e7eb;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Arial, sans-serif;
+            color: #20304a;
             background:
-                radial-gradient(circle at 20% 0%, rgba(34, 211, 238, 0.25), transparent 60%),
-                radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.25), transparent 60%),
-                linear-gradient(135deg, #020617, #0f172a, #0b1120);
+                radial-gradient(circle at 20% 0%, rgba(163, 210, 255, 0.35), transparent 55%),
+                radial-gradient(circle at 80% 100%, rgba(255, 203, 228, 0.28), transparent 55%),
+                linear-gradient(180deg, #f9fbff 0%, #eef4fc 100%);
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.14), transparent 65%),
-                radial-gradient(circle at 80% 60%, rgba(34, 197, 94, 0.12), transparent 60%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* ===== HEADER ===== */
         .brand-header {
             position: fixed;
             top: 12px;
@@ -42,21 +29,21 @@
             gap: 12px;
             padding: 10px 16px;
             border-radius: 16px;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+            background: rgba(255, 255, 255, 0.74);
+            border: 1px solid rgba(126, 143, 170, 0.24);
+            backdrop-filter: blur(14px) saturate(130%);
+            -webkit-backdrop-filter: blur(14px) saturate(130%);
+            box-shadow: 0 10px 24px rgba(74, 104, 148, 0.14);
         }
 
         .brand-logo {
             width: 40px;
             height: 40px;
-            border-radius: 14px;
-            background: radial-gradient(circle at 30% 0%, #22d3ee, #22c55e);
+            border-radius: 12px;
+            background: linear-gradient(145deg, #6ec0ff, #2f80ff);
             position: relative;
             flex-shrink: 0;
-            box-shadow:
-                0 0 20px rgba(34, 211, 238, 0.9),
-                0 0 0 1px rgba(15, 23, 42, 0.8);
+            box-shadow: 0 8px 18px rgba(47, 128, 255, 0.3);
         }
 
         .brand-logo::after {
@@ -67,17 +54,11 @@
             place-items: center;
             font-weight: 900;
             font-size: 18px;
-            line-height: 1;
-            color: #020617;
+            color: #fff;
         }
 
-        .brand-title {
-            font-size: 16px;
-            font-weight: 700;
-            white-space: nowrap;
-        }
+        .brand-title { font-size: 16px; font-weight: 700; white-space: nowrap; }
 
-        /* ===== LAYOUT ===== */
         .container {
             height: 100vh;
             display: flex;
@@ -88,92 +69,81 @@
             padding: 20px;
         }
 
-        /* ===== CHECKMARK FIX ===== */
         .checkmark-wrapper {
             position: relative;
-            margin: 48px 0 32px;
-            padding: 36px; /* ✅ chống lẹm */
+            margin: 46px 0 30px;
+            padding: 30px;
         }
 
         .checkmark-glow {
             position: absolute;
             inset: 0;
             border-radius: 999px;
-            background: radial-gradient(circle, rgba(34,197,94,0.35), transparent 70%);
-            filter: blur(24px);
+            background: radial-gradient(circle, rgba(54, 172, 110, 0.22), transparent 70%);
+            filter: blur(18px);
             z-index: 0;
         }
 
         .checkmark {
-            width: 150px;
-            height: 150px;
-            overflow: visible; /* ✅ CHỐT */
+            width: 146px;
+            height: 146px;
             position: relative;
             z-index: 1;
-            filter: drop-shadow(0 12px 40px rgba(22,163,74,0.55));
-            animation: pop-in 0.5s cubic-bezier(0.18,0.89,0.32,1.28);
+            filter: drop-shadow(0 8px 20px rgba(54, 172, 110, 0.22));
+            animation: pop-in 0.45s ease-out;
         }
 
         @keyframes pop-in {
-            0% { transform: scale(0.7); opacity: 0; }
-            60% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); }
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
         .checkmark__circle {
             stroke-dasharray: 166;
             stroke-dashoffset: 166;
             stroke-width: 3;
-            stroke: #22c55e;
+            stroke: #36ac6e;
             fill: none;
-            animation: stroke-animation 0.6s ease-out forwards;
+            animation: stroke-animation 0.55s ease-out forwards;
         }
 
         .checkmark__check {
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
             stroke-width: 3;
-            stroke: #22c55e;
+            stroke: #36ac6e;
             fill: none;
-            animation: check-animation 0.4s ease-out 0.6s forwards;
+            animation: check-animation 0.35s ease-out 0.55s forwards;
         }
 
         @keyframes stroke-animation { to { stroke-dashoffset: 0; } }
         @keyframes check-animation { to { stroke-dashoffset: 0; } }
 
-        /* ===== MESSAGE ===== */
         .message-box {
-            background:
-                radial-gradient(circle at top left, rgba(34,211,238,0.16), transparent 60%),
-                radial-gradient(circle at bottom right, rgba(16,185,129,0.18), transparent 60%),
-                rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(14px);
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(14px) saturate(130%);
+            -webkit-backdrop-filter: blur(14px) saturate(130%);
             border-radius: 22px;
             padding: 24px 28px;
             box-shadow:
-                0 18px 40px rgba(0,0,0,0.45),
-                0 0 0 1px rgba(148,163,184,0.32);
+                0 16px 30px rgba(74, 104, 148, 0.13),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(126, 143, 170, 0.24);
             max-width: 360px;
             width: 100%;
         }
 
-        .message {
-            font-size: 18px;
-            font-weight: 600;
-        }
+        .message { font-size: 18px; font-weight: 600; }
 
         .count {
             font-weight: 800;
-            color: #5eead4;
-            text-shadow: 0 0 12px rgba(34,211,238,1);
+            color: #2f80ff;
+            display: inline-block;
             animation: pulse 1s ease-out infinite;
         }
 
-        @keyframes pulse {
-            50% { transform: scale(1.18); }
-        }
+        @keyframes pulse { 50% { transform: scale(1.1); } }
 
-        /* ===== BOOK CTA NỔI BẬT ===== */
         .hint {
             margin-top: 20px;
             display: flex;
@@ -186,31 +156,21 @@
             gap: 10px;
             padding: 10px 16px;
             border-radius: 999px;
-            background: rgba(15,23,42,0.85);
-            box-shadow:
-                0 0 0 1px rgba(94,234,212,0.35),
-                0 0 24px rgba(34,211,238,0.45);
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(47, 128, 255, 0.22);
+            box-shadow: 0 8px 20px rgba(47, 128, 255, 0.14);
             text-decoration: none;
-            animation: doc-pulse 1.8s ease-in-out infinite;
         }
 
-        .doc-link span {
-            font-size: 20px;
-        }
-
-        .doc-link strong {
-            font-size: 14px;
-            font-weight: 700;
-            color: #5eead4;
-        }
-
-        @keyframes doc-pulse {
-            0%,100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
+        .doc-link span { font-size: 20px; }
+        .doc-link strong { font-size: 14px; font-weight: 700; color: #2f80ff; }
 
         @media (max-width: 480px) {
             .checkmark { width: 120px; height: 120px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
@@ -227,7 +187,7 @@
     <div class="checkmark-wrapper">
         <div class="checkmark-glow"></div>
         <svg class="checkmark" viewBox="0 0 52 52">
-            <circle class="checkmark__circle" cx="26" cy="26" r="25"/>
+            <circle class="checkmark__circle" cx="26" cy="26" r="23.5"/>
             <path class="checkmark__check" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
         </svg>
     </div>
